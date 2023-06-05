@@ -28,7 +28,7 @@ app = Flask(__name__)
 conf = zenoh.Config()
 zenoh.init_logger()
 session = zenoh.open(conf)
-last = "I got nothing, G."
+last = ["--init--"]
 def listener(sample: Sample):
     global last
     try:
@@ -39,7 +39,9 @@ def listener(sample: Sample):
         f">> [Subscriber] Received {sample.kind}: {sample.key_expr} (size {len(sample.payload)})"
     )
     print(s_decoded)
-    last = s_decoded
+    last.append(s_decoded)
+    if len(last) > 10:
+        last.pop(0)
 
 key = "**"
 sub = session.declare_subscriber(key, listener, reliability=Reliability.RELIABLE())
@@ -64,7 +66,7 @@ def get_current_time():
 def zenoh_get_last():
     global last
     status = 1
-    response = last
+    response = "\n".join(str(l) for l in last)
     return {"response": response, "status": status}
 
 @app.route("/conntest/api/ping/single")
