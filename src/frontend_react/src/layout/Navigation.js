@@ -5,6 +5,11 @@ import {Box} from "@mui/material";
 
 const links = [
     {
+        name: 'Zenoh',
+        to: '/zenoh',
+        active: 'zenoh'
+    },
+    {
         name: 'Ping',
         to: '/',
         active: 'ping'

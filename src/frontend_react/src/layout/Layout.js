@@ -1,6 +1,7 @@
 import React from 'react';
 import Style from '../Style.module.scss'
 import Navbar from "./Navigation";
+import Zenoh from "../pages/Zenoh";
 import Ping from "../pages/Ping";
 import Dns from "../pages/Dns";
 import Ntp from "../pages/Ntp";
@@ -21,6 +22,7 @@ export default function Layout() {
             </Grid>
             <Grid item flexGrow={1}>
                <Routes>
+               <Route exact path={'/zenoh'} element={<Zenoh/>}/>
                <Route exact path={'/'} element={<Ping/>}/>
                <Route exact path={'/dns'} element={<Dns/>}/>
                <Route exact path={'/ntp'} element={<Ntp/>}/>
