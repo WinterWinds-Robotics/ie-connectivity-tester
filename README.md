@@ -11,6 +11,7 @@ Network diagnostic tool for Industrial Edge Devices.
     - [Used components](#used-components)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Zenoh](#zenoh)
     - [Ping](#ping)
     - [DNS](#dns)
     - [NTP](#ntp)
@@ -28,6 +29,7 @@ Network diagnostic tool for Industrial Edge Devices.
 To provide additional network diagnostic possibilities on Industrial Edge Devices, an Edge App can be written with a Python backend and a simple Web UI to enable user interaction.
 
 Current feature set:
+* Zenoh
 * Ping
 * DNS resolution and reverse lookup
 * NTP
@@ -67,6 +69,11 @@ Please follow the [installation instructions](docs/Installation.md).
 To use the app, click on the app icon on your Edge Device or go to `https://<IED_IP>/conntest/`. Use the navigation bar on the top of the page to choose a tool and use the provided input dialogs to execute them.
 
 ![usage](/docs/graphics/conntest_01.png)
+
+### Zenoh
+
+The host:port field presently isn't used for anything and can be left as default.
+When the SEND button is pressed, the most recent message received on the Zenoh bus--subscribed to "**"--is displayed.
 
 ### Ping
 
