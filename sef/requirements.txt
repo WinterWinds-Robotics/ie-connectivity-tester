@@ -1,0 +1,7 @@
+eclipse-zenoh
+rich
+paho-mqtt
+IPython
+pyglet
+
+
