@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 export default function Zenoh() {
 
-    const [hostname, setHostname] = useState("google.com");
+    const [hostname, setHostname] = useState("localhost:7447");
     const [response, setResponse] = useState(0);
     const [responseStatus, setResponseStatus] = useState(0);
     const [loading, setLoading] = useState(0);
@@ -41,7 +41,7 @@ export default function Zenoh() {
             setResponseStatus(0);
             setLoading(true);
         
-            fetch(`/conntest/api/ping/single?h=${hostname}`).then(res => res.json()).then(data => {
+            fetch(`/conntest/api/zenoh/last?h=${hostname}`).then(res => res.json()).then(data => {
                 setResponse(data.response);
                 setResponseStatus(data.status);
                 setLoading(false);

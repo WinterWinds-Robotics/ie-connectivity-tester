@@ -17,10 +17,32 @@ import ast
 from asyncua import Client
 import logging
 
+import zenoh
+from zenoh import Reliability, Sample
+
 logger = logging.getLogger("asyncua")
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
+
+conf = zenoh.Config()
+zenoh.init_logger()
+session = zenoh.open(conf)
+last = "I got nothing, G."
+def listener(sample: Sample):
+    global last
+    try:
+        s_decoded = sample.payload.decode("utf-8")
+    except:
+        s_decoded = "<binary>"
+    print(
+        f">> [Subscriber] Received {sample.kind}: {sample.key_expr} (size {len(sample.payload)})"
+    )
+    print(s_decoded)
+    last = s_decoded
+
+key = "**"
+sub = session.declare_subscriber(key, listener, reliability=Reliability.RELIABLE())
 
 
 @app.errorhandler(404)
@@ -37,6 +59,13 @@ def internal_error(error):
 def get_current_time():
     return {"time": time.time()}
 
+
+@app.route("/conntest/api/zenoh/last")
+def zenoh_get_last():
+    global last
+    status = 1
+    response = last
+    return {"response": response, "status": status}
 
 @app.route("/conntest/api/ping/single")
 def get_ping():
