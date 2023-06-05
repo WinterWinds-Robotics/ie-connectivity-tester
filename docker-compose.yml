@@ -3,8 +3,12 @@
 # See LICENSE file in the top-level directory.
 
 version: '2.4'
-
 services:
+  heartbeat:
+    image: conntest_heartbeat:0.1
+    mem_limit: 300mb
+    networks:
+      - conntest-net
   conntest_backend:
     build:
       context: ./src/backend_flask
@@ -33,7 +37,6 @@ services:
       - conntest-net
     ports:
       - "3000:80"
-
 networks:
   conntest-net:
     name: conntest-net
