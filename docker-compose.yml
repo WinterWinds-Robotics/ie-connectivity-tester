@@ -42,6 +42,19 @@ services:
       - conntest-net
     ports:
       - "3000:80"
+  evaics:
+    image: altertech/eva-ics4:2023053001
+    # volumes:
+    # - /srv/docker/evaics/etc:/opt/eva4/etc
+    # - /srv/docker/evaics/init:/opt/eva4/init
+    # - /srv/docker/evaics/runtime:/opt/eva4/runtime
+    # - /srv/docker/evaics/log:/opt/eva4/log
+    # - /srv/docker/evaics/pvt:/opt/eva4/pvt
+    # - /srv/docker/evaics/ui:/opt/eva4/ui
+  zenoh:
+    image: eclipse/zenoh-bridge-mqtt:latest
+    ports:
+      - 1883:1883
 networks:
   conntest-net:
     name: conntest-net
