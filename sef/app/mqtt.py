@@ -64,6 +64,7 @@ parser.add_argument("-i", "--interactive", action="store_true")
 args, unknown = parser.parse_known_args()
 
 
+mqttlc = mqtt.Client(args.clientid, clean_session=not args.disable_clean_session)
 
 
 def on_connect(mqttc, obj, flags, rc):
@@ -82,8 +83,10 @@ mutex = threading.Lock()
 
 
 def on_message(mqttc, obj, msg):
+    global mqttlc
     global last_msg, last_json
-    zsession.put(f"mqtt/raw{msg.topic}", msg.payload)
+    mqttlc.publish(msg.topic, msg.payload)
+    # zsession.put(f"mqtt/raw{msg.topic}", msg.payload)
     if base_search not in msg.topic:
         return
         
@@ -115,10 +118,10 @@ def on_message(mqttc, obj, msg):
                 print(payload)
             last_msg[msg.topic] = payload
 
-        try:
-            zsession.put(f"mqtt/processed/{msg.topic}", payload)
-        except:
-            print(f"ERROR putting \"mqtt/processed/{msg.topic}\"")
+        # try:
+        #     zsession.put(f"mqtt/processed/{msg.topic}", payload)
+        # except:
+        #     print(f"ERROR putting \"mqtt/processed/{msg.topic}\"")
 
         mutex.release()
         # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
@@ -135,8 +138,8 @@ def on_message(mqttc, obj, msg):
 
 
 def on_publish(mqttc, obj, mid):
-    if topic_search in msg.topic:
-        print("mid: " + str(mid))
+    # if topic_search in msg.topic:
+    print("mid: " + str(mid))
 
 
 def on_subscribe(mqttc, obj, mid, granted_qos):
@@ -195,7 +198,8 @@ if args.username or args.password:
 
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
-mqttc.on_publish = on_publish
+mqttlc.on_connect = on_connect
+mqttlc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 
 if args.debug:
@@ -203,6 +207,14 @@ if args.debug:
 
 print("Connecting to " + args.host + " port: " + str(port))
 mqttc.connect(args.host, port, args.keepalive)
+try:
+    mqttlc.connect("zenoh", 1883, args.keepalive)
+except Exception as e:
+    print(f"EXCEPTION : {e}")
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print(exc_type, fname, exc_tb.tb_lineno)
+    
 mqttc.subscribe(args.topic, args.qos)
 
 

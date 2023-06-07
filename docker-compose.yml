@@ -8,12 +8,16 @@ services:
     image: conntest_heartbeat:0.1
     mem_limit: 300mb
     networks:
-      - conntest-net
-  sef:
-    image: conntest_sef:0.1
-    mem_limit: 1000mb
-    networks:
-      - conntest-net
+      - ie-databus
+    links:
+      - zenoh
+  # sef:
+  #   image: conntest_sef:0.1
+  #   mem_limit: 1000mb
+  #   networks:
+  #     - ie-databus
+  #   links:
+  #     - zenoh
   conntest_backend:
     build:
       context: ./src/backend_flask
@@ -26,7 +30,7 @@ services:
         max-size: "10m"
         max-file: "1"
     networks:
-      - conntest-net
+      - ie-databus
   conntest_frontend:
     build:
       context: ./src/frontend_react
@@ -39,7 +43,7 @@ services:
         max-size: "10m"
         max-file: "1"
     networks:
-      - conntest-net
+      - ie-databus
     ports:
       - "3000:80"
   evaics:
@@ -55,6 +59,8 @@ services:
     image: eclipse/zenoh-bridge-mqtt:latest
     ports:
       - 1883:1883
+    networks:
+      - ie-databus
 networks:
-  conntest-net:
-    name: conntest-net
+  ie-databus:
+    name: ie-databus

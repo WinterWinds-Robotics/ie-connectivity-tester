@@ -38,8 +38,8 @@ def listener(sample: Sample):
     print(
         f">> [Subscriber] Received {sample.kind}: {sample.key_expr} (size {len(sample.payload)})"
     )
-    print(s_decoded)
-    last.append(s_decoded)
+    # print(s_decoded)
+    last.append(f"{sample.key_expr} : {s_decoded}")
     if len(last) > 10:
         last.pop(0)
 

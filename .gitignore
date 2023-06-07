@@ -1,2 +1,4 @@
 debug.log
-sef/app/.env
+*/.env
+*/*/.env
+*/.venv
